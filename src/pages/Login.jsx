@@ -8,17 +8,40 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+ const handleLogin = async (e) => {
+  e.preventDefault();
 
-    console.log({
-      email,
-      password,
-    });
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/login",
+      {
+        email,
+        password,
+      }
+    );
 
-    // TODO:
-    // Connect to your backend login API
-  };
+    // Save JWT token
+    localStorage.setItem("token", response.data.token);
+
+    // Save logged-in user
+    localStorage.setItem(
+      "user",
+      JSON.stringify(response.data.user)
+    );
+
+    alert(response.data.message);
+
+    // Clear form
+    setEmail("");
+    setPassword("");
+
+    // We'll redirect later
+    // navigate("/");
+
+  } catch (error) {
+    alert(error.response?.data?.message || "Login failed.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#313338] flex items-center justify-center p-5">

@@ -1,23 +1,36 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSignup = (e) => {
-    e.preventDefault();
+  const handleSignup = async (e) => {
+  e.preventDefault();
 
-    console.log({
-      username,
-      email,
-      password,
-    });
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/register",
+      {
+        username,
+        email,
+        password,
+      }
+    );
 
-    // TODO:
-    // Connect to your backend signup API
-  };
+    alert(response.data.message);
+
+    // Clear the form
+    setUsername("");
+    setEmail("");
+    setPassword("");
+
+  } catch (error) {
+    alert(error.response?.data?.message || "Something went wrong.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#313338] flex items-center justify-center p-5">
